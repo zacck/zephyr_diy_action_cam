@@ -1,0 +1,19 @@
+#include <zephyr/dt-bindings/pinctrl/stm32-pinctrl.h>
+
+&pinctrl {
+    spi3_sck: spi3_sck {
+        pinmux = < 0x2E6 >; /* PB3: SPI3_SCK, AF6, push-pull, high-speed, no pull */
+    };
+    spi3_miso: spi3_miso {
+        pinmux = < 0x306 >; /* PB4: SPI3_MISO, AF6, push-pull, high-speed, no pull */
+    };
+    spi3_mosi: spi3_mosi {
+        pinmux = < 0x326 >; /* PB5: SPI3_MOSI, AF6, push-pull, high-speed, no pull */
+    };
+};
+
+&spi3 {
+    status = "okay";
+    pinctrl-0 = <&spi3_sck &spi3_miso &spi3_mosi>;
+    pinctrl-names = "default";
+};
