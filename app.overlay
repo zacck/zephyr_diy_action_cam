@@ -1,19 +1,80 @@
 #include <zephyr/dt-bindings/pinctrl/stm32-pinctrl.h>
+#include <zephyr/dt-bindings/display/ili9xxx.h>
 
+/ {
+    chosen {
+        zephyr,display = &ili9341;
+    }; 
+
+    /*LCD*/
+    mipi_dbi {
+        compatible = "zephyr,mipi-dbi-spi";
+        status = "okay";
+        spi-dev = <&spi1>;
+        dc-gpios = <&gpiob 7 GPIO_ACTIVE_HIGH>; /* PB7: Data/Command */
+        reset-gpios = <&gpiob 8 GPIO_ACTIVE_LOW>; /* PB8: Reset, active low */
+        #pinctrl-0 = <&display_dc &display_reset>;
+        #pinctrl-names = "default";
+        #address-cells = <1>;
+        #size-cells = <0>;
+        write-only;
+
+        ili9341: ili9341@0 {
+            compatible = "ilitek,ili9341";
+            reg = <0>;
+            mipi-max-frequency = <10000000>;
+            pixel-format = <ILI9XXX_PIXEL_FORMAT_RGB565>;
+            rotation = <0>;
+            width = <320>;
+            height = <240>;
+        };
+    };
+
+}; 
+
+
+/* Pinmux configuration for SPI1 */
 &pinctrl {
-    spi3_sck: spi3_sck {
-        pinmux = < 0x2E6 >; /* PB3: SPI3_SCK, AF6, push-pull, high-speed, no pull */
+    spi1_sck: spi1_sck {
+        pinmux = <STM32_PINMUX('A', 5, AF5)>; /* PA5: SPI1_SCK, Alternate Function 5 */
+        bias-disable; /* No pull-up/pull-down */
+        drive-push-pull;
     };
-    spi3_miso: spi3_miso {
-        pinmux = < 0x306 >; /* PB4: SPI3_MISO, AF6, push-pull, high-speed, no pull */
+    spi1_miso: spi1_miso {
+        pinmux = <STM32_PINMUX('A', 6, AF5)>; /* PA6: SPI1_MISO, Alternate Function 5 */
+        bias-disable;
+        drive-push-pull;
     };
-    spi3_mosi: spi3_mosi {
-        pinmux = < 0x326 >; /* PB5: SPI3_MOSI, AF6, push-pull, high-speed, no pull */
+    spi1_mosi: spi1_mosi {
+        pinmux = <STM32_PINMUX('A', 7, AF5)>; /* PA7: SPI1_MOSI, Alternate Function 5 */
+        bias-disable;
+        drive-push-pull;
+    };
+    /* Chip Select (CS) pin: PB6 */
+    spi1_cs: spi1_cs {
+        pinmux = <STM32_PINMUX('B', 6, GPIO)>; /* PB6: GPIO for CS */
+        bias-disable;
+        drive-push-pull;
+    };
+    /* Data/Command (DC) pin: PB7 */
+    display_dc: display_dc {
+        pinmux = <STM32_PINMUX('B', 7, GPIO)>; /* PB7: GPIO for DC */
+        bias-disable;
+        drive-push-pull;
+    };
+    /* Reset pin: PB8 */
+    display_reset: display_reset {
+        pinmux = <STM32_PINMUX('B', 8, GPIO)>; /* PB8: GPIO for Reset */
+        bias-disable;
+        drive-push-pull;
     };
 };
 
-&spi3 {
+/* SPI1 peripheral configuration */
+&spi1 {
     status = "okay";
-    pinctrl-0 = <&spi3_sck &spi3_miso &spi3_mosi>;
+    pinctrl-0 = <&spi1_sck &spi1_miso &spi1_mosi>;
     pinctrl-names = "default";
+    cs-gpios = <&gpiob 6 GPIO_ACTIVE_LOW>; 
+   
 };

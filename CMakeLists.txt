@@ -6,3 +6,6 @@ project(ov7670)
 
 
 target_sources(app PRIVATE src/main.c)
+zephyr_include_directories(${ZEPHYR_BASE}/modules/lvgl/include)
+
+
