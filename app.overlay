@@ -11,8 +11,8 @@
         compatible = "zephyr,mipi-dbi-spi";
         status = "okay";
         spi-dev = <&spi1>;
-        dc-gpios = <&gpiob 7 GPIO_ACTIVE_HIGH>; /* PB7: Data/Command */
-        reset-gpios = <&gpiob 8 GPIO_ACTIVE_LOW>; /* PB8: Reset, active low */
+        dc-gpios = <&gpioc 15 GPIO_ACTIVE_HIGH>; 
+        reset-gpios = <&gpioe 5 GPIO_ACTIVE_LOW>; 
         #pinctrl-0 = <&display_dc &display_reset>;
         #pinctrl-names = "default";
         #address-cells = <1>;
@@ -36,35 +36,35 @@
 /* Pinmux configuration for SPI1 */
 &pinctrl {
     spi1_sck: spi1_sck {
-        pinmux = <STM32_PINMUX('A', 5, AF5)>; /* PA5: SPI1_SCK, Alternate Function 5 */
+        pinmux = <STM32_PINMUX('B', 3, AF5)>;
         bias-disable; /* No pull-up/pull-down */
         drive-push-pull;
     };
     spi1_miso: spi1_miso {
-        pinmux = <STM32_PINMUX('A', 6, AF5)>; /* PA6: SPI1_MISO, Alternate Function 5 */
+        pinmux = <STM32_PINMUX('B', 4, AF5)>;
         bias-disable;
         drive-push-pull;
     };
     spi1_mosi: spi1_mosi {
-        pinmux = <STM32_PINMUX('A', 7, AF5)>; /* PA7: SPI1_MOSI, Alternate Function 5 */
+        pinmux = <STM32_PINMUX('B', 5, AF5)>;
         bias-disable;
         drive-push-pull;
     };
     /* Chip Select (CS) pin: PB6 */
     spi1_cs: spi1_cs {
-        pinmux = <STM32_PINMUX('B', 6, GPIO)>; /* PB6: GPIO for CS */
+        pinmux = <STM32_PINMUX('C', 13, GPIO)>;
         bias-disable;
         drive-push-pull;
     };
     /* Data/Command (DC) pin: PB7 */
     display_dc: display_dc {
-        pinmux = <STM32_PINMUX('B', 7, GPIO)>; /* PB7: GPIO for DC */
+        pinmux = <STM32_PINMUX('C', 15, GPIO)>; 
         bias-disable;
         drive-push-pull;
     };
     /* Reset pin: PB8 */
     display_reset: display_reset {
-        pinmux = <STM32_PINMUX('B', 8, GPIO)>; /* PB8: GPIO for Reset */
+        pinmux = <STM32_PINMUX('E', 5, GPIO)>;
         bias-disable;
         drive-push-pull;
     };
@@ -75,6 +75,6 @@
     status = "okay";
     pinctrl-0 = <&spi1_sck &spi1_miso &spi1_mosi>;
     pinctrl-names = "default";
-    cs-gpios = <&gpiob 6 GPIO_ACTIVE_LOW>; 
+    cs-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>; 
    
 };
